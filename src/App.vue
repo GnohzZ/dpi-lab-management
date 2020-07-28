@@ -121,6 +121,9 @@ export default {
     toAbout () {
       this.$router.push('/about')
     }
+  },
+
+  created: function () {
   }
 }
 </script>
