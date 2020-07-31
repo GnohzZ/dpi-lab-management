@@ -1,32 +1,68 @@
 <template>
   <v-container
-    class="fill-height flex-grow-1 flex-shrink-0"
+    class="flex-grow-1 flex-shrink-0"
     fluid
   >
     <v-row
-      align="center"
+      align="start"
       justify="center"
     >
       <v-col
         cols="12"
+        align="start"
+        justify="start"
+        align-content = "start"
       >
-        <v-card>
-          <v-card-title>
-            Nutrition
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-          ></v-data-table>
+        <v-card
+            class = "py-1"
+          >
+            <v-card-title
+              class = "pt-0"
+            >
+              Nutrition
+              <v-spacer></v-spacer>
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-card-title>
+            <v-data-table
+              :height="maxHeight"
+              fixed-header
+              :loading = "tableLoading"
+              :headers="headers"
+              :items="desserts"
+              :search="search"
+              :footer-props="tFooterProp"
+              :page.sync="page"
+              @page-count="pageCount = $event"
+              :items-per-page="itemsPerPage"
+              hide-default-footer
+              v-resize = "onResize"
+            ></v-data-table>
+            <v-divider></v-divider>
+            <v-row
+              align="center"
+              justify="center"
+            >
+              <v-spacer width = "100" class="hidden-sm-and-down"></v-spacer>
+              <v-select
+                v-model = "itemsPerPage"
+                :items="itemNumberPerPage"
+                label="Items per page"
+                dense
+                class="mt-4 mb-n4 ml-6 mr-6"
+              ></v-select>
+              <v-pagination
+                v-model="page"
+                :length="pageCount"
+                :total-visible="3"
+                class = "pb-0 mb-n1 mt-0 mr-3"
+              ></v-pagination>
+            </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -37,7 +73,15 @@
 export default {
   data () {
     return {
+      windowHeight: 500,
+      tableLoading: false,
+      page: 1,
+      itemsPerPage: 10,
+      itemNumberPerPage: [5, 10, 15, 20],
       search: '',
+      tFooterProp: {
+        'items-per-page-text': 'Per page'
+      },
       headers: [
         {
           text: 'Dessert (100g serving)',
@@ -131,9 +175,64 @@ export default {
           carbs: 65,
           protein: 7,
           iron: '6%'
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: '6%'
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: '6%'
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: '6%'
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: '6%'
         }
       ]
     }
+  },
+
+  methods: {
+    onResize: function () {
+      this.windowHeight = window.innerHeight
+    }
+  },
+
+  computed: {
+    maxHeight: function () {
+      const mheight = this.windowHeight - 265
+      if (mheight > 48 * (this.itemsPerPage + 1)) return 48 * (this.itemsPerPage + 1)
+      else return this.windowHeight - 265
+    },
+    pageCount: {
+      get () {
+        return Math.ceil(this.desserts.length / this.itemsPerPage)
+      },
+      set () {}
+    }
+  },
+  created () {
+    this.onResize()
   }
 }
 </script>

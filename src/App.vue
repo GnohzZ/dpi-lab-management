@@ -73,6 +73,8 @@
     <v-app-bar
       app
       flat
+      dense
+      max-height="50"
     >
       <v-app-bar-nav-icon
         @click.stop="changeDrawer"
@@ -80,10 +82,19 @@
       </v-app-bar-nav-icon>
       <v-toolbar-title>{{this.$route.name}}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text @click="toDarkmode">
-        <v-icon v-if="dark"> mdi-brightness-5 </v-icon>
-        <v-icon v-else> mdi-brightness-4 </v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+            @click="toDarkmode"
+          >
+            <v-icon v-if="dark"> mdi-brightness-5 </v-icon>
+            <v-icon v-else> mdi-brightness-4 </v-icon>
+          </v-btn>
+        </template>
+        <span>Dark Mode</span>
+      </v-tooltip>
     </v-app-bar>
 
   <v-main>
@@ -91,6 +102,7 @@
   </v-main>
   <LoginDialog></LoginDialog>
   <v-footer
+    dense
     app
   >
     <span>Powered by Vue</span>
