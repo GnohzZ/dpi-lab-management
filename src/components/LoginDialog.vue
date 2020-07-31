@@ -7,7 +7,6 @@
       v-model="showingLoginDialog"
       max-width="580px"
       persistent
-      hide-overlay
     >
       <v-card>
         <v-toolbar
@@ -17,6 +16,9 @@
         >
           <v-toolbar-title>Please Login</v-toolbar-title>
           <v-spacer></v-spacer>
+          <span class="font-italic white--text pa-0 hidden-md-and-down">
+            Close and jump to previous page
+          </span>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
               <v-btn
@@ -76,6 +78,8 @@ export default {
   methods: {
     closeLoginDialog () {
       this.$store.commit('changeLoginDialogState', false)
+      this.$router.back()
+      this.$store.commit('changeDrawerState', true)
     }
   }
 }

@@ -1,11 +1,17 @@
 <template>
-  <v-app>
+  <v-app
+    v-touch = "{
+      left: () => swipe('left'),
+      right: () => swipe('right')
+    }"
+  >
     <v-navigation-drawer
       v-model="drawer"
       class="flex-grow-1 flex-shrink-0"
       hide-overlay
       flat
       app
+      disable-route-watcher
     >
       <v-list
         nav
@@ -69,7 +75,7 @@
       flat
     >
       <v-app-bar-nav-icon
-        @click.stop="drawer = !drawer"
+        @click.stop="changeDrawer"
       >
       </v-app-bar-nav-icon>
       <v-toolbar-title>{{this.$route.name}}</v-toolbar-title>
@@ -105,15 +111,13 @@ export default {
   },
 
   data: () => ({
-    drawer: false,
-    homeActive: true
+
   }),
 
   computed: {
     // router computed prop
     selection: {
       get () {
-        console.log(this.$route.name)
         switch (this.$route.name) {
           case 'Home':
             return 0
@@ -130,12 +134,15 @@ export default {
         }
       },
       set (value) {
+        if ((this.$vuetify.breakpoint.name !== 'lg') && (this.$vuetify.breakpoint.name !== 'xl')) {
+          this.$store.commit('changeDrawerState', false)
+        }
         switch (value) {
           case 0:
-            console.log(this.$router.push('/home'))
+            this.$router.push('/home')
             break
           case 1:
-            console.log(this.$router.push('/search').catch(() => { }))
+            this.$router.push('/search').catch(() => { })
             break
           case 2:
             this.$router.push('/account/' + this.username)
@@ -167,26 +174,43 @@ export default {
     // theme computed prop
     dark: function () {
       return this.$vuetify.theme.dark
+    },
+
+    // ui prop
+    drawer: {
+      get () {
+        return this.$store.getters.getDrawerState
+      },
+      set (val) {
+        this.$store.commit('changeDrawerState', val)
+      }
     }
   },
 
   watch: {
-    selection: function (newSelection, oldSelection) {
-      console.log(newSelection)
-      console.log(oldSelection)
-    }
+
   },
 
   methods: {
     toDarkmode: function (event) {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+    },
+
+    changeDrawer: function (event) {
+      this.$store.commit('changeDrawerState', !this.$store.getters.getDrawerState)
+    },
+
+    // touch methods
+    swipe: function (direction) {
+      if (direction === 'left') this.$store.commit('changeDrawerState', false)
+      else if (direction === 'right') this.$store.commit('changeDrawerState', true)
     }
   },
 
   created: function () {
     // 在非移动设备上使左侧菜单栏初始状态为可见
     if ((this.$vuetify.breakpoint.name === 'lg') || (this.$vuetify.breakpoint.name === 'xl')) {
-      this.drawer = true
+      this.$store.commit('changeDrawerState', true)
     }
   }
 }

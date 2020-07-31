@@ -10,9 +10,11 @@ export default new Vuex.Store({
       username: '精小仪',
       roleLevel: 3
     },
+
     dialogs: {
       loginDialog: false
     },
+    drawer: false,
     routeState: {
     }
   },
@@ -23,6 +25,10 @@ export default new Vuex.Store({
 
     getLoginDialogState (state) {
       return state.dialogs.loginDialog
+    },
+
+    getDrawerState (state) {
+      return state.drawer
     }
   },
   mutations: {
@@ -37,6 +43,10 @@ export default new Vuex.Store({
 
     changeLoginDialogState (state, dialogOn) {
       state.dialogs.loginDialog = dialogOn
+    },
+
+    changeDrawerState (state, drawerOn) {
+      state.drawer = drawerOn
     }
   },
   actions: {

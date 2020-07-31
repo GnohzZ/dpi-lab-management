@@ -71,11 +71,13 @@ const router = new VueRouter({
 })
 
 router.beforeResolve((to, from, next) => {
-  console.log(from.name)
   if (to.meta.requireAuth && !(store.getters.getLoginState.isAuthenticated === 'true')) {
     store.commit('changeLoginDialogState', true)
-    next({ name: from.name })
-  } else next()
+    next()
+  } else {
+    next()
+    store.commit('changeLoginDialogState', false)
+  }
 })
 
 export default router
