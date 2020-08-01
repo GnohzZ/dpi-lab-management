@@ -29,7 +29,9 @@
             >
               <v-expansion-panels
                 focusable
+                hover
                 :value = "selectedPanel"
+                active-class="primary--text"
               >
                 <v-expansion-panel
                   v-for="(notice,i) in sortedNotices"
@@ -38,15 +40,10 @@
                   <v-expansion-panel-header>
                     <v-row class = "py-0">
                       <v-col class = "py-1" v-if = "breakPoint !== 'xs'">
-                        <!-- <v-card
-                          width = "190"
-                          flat
-                        > -->
-                          <span class="font-weight-light">{{notice.publishTime}}</span>
-                          <span class="font-italic" v-if = "notice.toTop"> [ sticky ] </span>
-                        <!-- </v-card> -->
+                        <span class="font-weight-light">{{notice.publishTime}}</span>
+                        <span class="font-italic" v-if = "notice.toTop"> [ sticky ] </span>
                       </v-col>
-                      <v-col class = "py-1 mx-1" align = "start" md = "9" sm = "7">
+                      <v-col class = "py-1 mr-2 ml-1" align = "start" md = "9" sm = "7">
                         <span class="font-weight-black" :class="{ 'primary--text': notice.importance }" >
                           {{notice.title}}
                         </span>
@@ -55,7 +52,9 @@
                   </v-expansion-panel-header>
                   <v-expansion-panel-content class = "mt-4">
                     <span class="font-weight-light" v-if = "breakPoint === 'xs'">{{notice.publishTime}}</span>
-                    <p>{{notice.content}}</p>
+                    <v-card flat> <!--用v-card避免文字跟随active属性变化-->
+                      <p>{{notice.content}}</p>
+                    </v-card>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
