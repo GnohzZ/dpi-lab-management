@@ -7,15 +7,24 @@ export default new Vuex.Store({
   state: {
     loginState: {
       isAuthenticated: 'true', // 有unknown，true，false三种状态
-      username: '精小仪',
+      username: 'username',
       roleLevel: 3
     },
 
     dialogs: {
       loginDialog: false
     },
+
     drawer: false,
     routeState: {
+    },
+
+    profile: {
+      name: '精小仪',
+      username: 'username',
+      role: 'Normal User',
+      email: 'abc123@mail.com',
+      studentID: '1234567890'
     }
   },
   getters: {
@@ -29,6 +38,10 @@ export default new Vuex.Store({
 
     getDrawerState (state) {
       return state.drawer
+    },
+
+    getProfile (state) {
+      return state.profile
     }
   },
   mutations: {
@@ -47,6 +60,14 @@ export default new Vuex.Store({
 
     changeDrawerState (state, drawerOn) {
       state.drawer = drawerOn
+    },
+
+    changeEmail (state, newEmail) {
+      state.profile.email = newEmail
+    },
+
+    changeUsername (state, newUsername) {
+      state.profile.username = newUsername
     }
   },
   actions: {

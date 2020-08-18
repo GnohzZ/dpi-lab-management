@@ -40,18 +40,58 @@
                   <v-expansion-panel-header>
                     <v-row class = "py-0">
                       <v-col class = "py-1" v-if = "breakPoint !== 'xs'">
-                        <span class="font-weight-light">{{notice.publishTime}}</span>
-                        <span class="font-italic" v-if = "notice.toTop"> [ sticky ] </span>
+                        <v-row>
+                          <v-col cols = "9" class="font-weight-light ma-0 pa-0 mr-n1">{{notice.publishTime}}</v-col>
+                          <v-col cols = "1" class="font-italic ma-0 pa-0 mr-2">
+                            <v-icon
+                              v-if = "notice.toTop"
+                              small
+                            >
+                              mdi-pin
+                            </v-icon>
+                          </v-col>
+                          <v-col cols = "1" class="font-italic ma-0 pa-0">
+                            <v-icon
+                              v-if = "notice.importance > 0"
+                              small
+                              color = "primary"
+                            >
+                              mdi-alert-circle
+                            </v-icon>
+                          </v-col>
+                        </v-row>
                       </v-col>
-                      <v-col class = "py-1 mr-2 ml-1" align = "start" md = "9" sm = "7">
-                        <span class="font-weight-black" :class="{ 'primary--text': notice.importance }" >
+                      <v-col class = "py-1 mr-2 ml-1" align = "start" md = "9" sm = "8">
+                        <span class="font-weight-black">
                           {{notice.title}}
                         </span>
                       </v-col>
                     </v-row>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content class = "mt-4">
-                    <span class="font-weight-light" v-if = "breakPoint === 'xs'">{{notice.publishTime}}</span>
+                    <span v-if = "breakPoint === 'xs'">
+                      <v-row>
+                        <v-col class="font-weight-light ma-0 pa-0 ml-3">{{notice.publishTime}}</v-col>
+                        <v-col cols = "1" class="font-italic ma-0 pa-0 mr-2">
+                          <v-icon
+                            v-if = "notice.toTop"
+                            small
+                            color = "primary"
+                          >
+                            mdi-pin
+                          </v-icon>
+                        </v-col>
+                        <v-col cols = "1" class="font-italic ma-0 pa-0">
+                          <v-icon
+                            v-if = "notice.importance > 0"
+                            small
+                            color = "primary"
+                          >
+                            mdi-star
+                          </v-icon>
+                        </v-col>
+                      </v-row>
+                    </span>
                     <v-card flat> <!--用v-card避免文字跟随active属性变化-->
                       <p>{{notice.content}}</p>
                     </v-card>
@@ -148,6 +188,7 @@ export default {
     onResize: function () {
       this.windowHeight = window.innerHeight
       this.breakPoint = this.$vuetify.breakpoint.name
+      console.log(this.breakPoint)
     }
   },
 
