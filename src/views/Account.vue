@@ -79,8 +79,8 @@
                           dense
                           single-line
                           flat
-                          hide-details
-                          :value = "showingUsername"
+                          :rules="[rules.required, rules.count]"
+                          v-model = "newUsername"
                         ></v-text-field>
                       </v-col>
                       <v-col>
@@ -113,7 +113,8 @@
                           dense
                           single-line
                           flat
-                          hide-details
+                          :rules="[rules.required]"
+                          v-model = "pwd1"
                         ></v-text-field>
                       </v-col>
                       <v-col>
@@ -153,8 +154,8 @@
                           dense
                           single-line
                           flat
-                          hide-details
-                          v-model = "showingEmail"
+                          v-model = "newEmail"
+                          :rules="[rules.required, rules.email]"
                         ></v-text-field>
                       </v-col>
                       <v-col>
@@ -187,7 +188,8 @@
                           dense
                           single-line
                           flat
-                          hide-details
+                          :rules="[rules.required]"
+                          v-model = 'pwd2'
                         ></v-text-field>
                       </v-col>
                       <v-col>
@@ -211,6 +213,19 @@
               </v-card-text>
             </v-card>
         </v-card>
+        <v-card
+          class = "py-1 my-1"
+        >
+          <v-card-title>Items on loan</v-card-title>
+          <v-data-table
+            fixed-header
+            :loading = "tableLoading"
+            :headers="headers"
+            :items="desserts"
+            hide-default-footer
+            hide-default-header
+          ></v-data-table>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -228,6 +243,7 @@ export default {
       windowHeight: 500,
       isEditingUsername: false,
       isEditingEmail: false,
+
       profile: {
         name: '精小仪',
         username: '精小仪',
@@ -235,8 +251,25 @@ export default {
         email: '',
         studentID: ''
       },
-      showingUsername: '',
-      showingEmail: ''
+      newUsername: '',
+      newEmail: '',
+      rules: {
+        required: value => !!value || 'Required.',
+        counter: value => value.length <= 20 || 'Max 20 characters',
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'Invalid e-mail.'
+        }
+      },
+      pwd1: '',
+      pwd2: '',
+
+      tableLoading: false,
+      headers: [
+        { text: 'Name of item', value: 'name' },
+        { text: 'Loan Date', value: 'date' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ]
     }
   },
 
@@ -248,24 +281,31 @@ export default {
 
     editingUsername: function () {
       if (this.isEditingUsername) {
-        this.showingUsername = ''
+        this.newUsername = ''
+        this.pwd1 = ''
       }
       this.isEditingUsername = !this.isEditingUsername
     },
 
     editingEmail: function () {
       if (this.isEditingEmail) {
-        this.showingEmail = ''
+        this.newEmail = ''
+        this.pwd2 = ''
       }
       this.isEditingEmail = !this.isEditingEmail
     },
 
-    editUsername: () => {
-
+    editUsername: function () {
+      // TODO:if there are errors in text field, alert
+      // TODO:send request to edit username and change local (vuex and this page) username
+      this.pwd1 = '' // TODO:here is an error
+      this.isEditingUsername = false
     },
 
-    editEmail: () => {
-
+    editEmail: function () {
+      // TODO:send request to edit email and change local (vuex and this page) email
+      this.pwd2 = ''
+      this.isEditingEmail = false
     }
   },
 
