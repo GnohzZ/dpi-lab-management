@@ -8,11 +8,12 @@ export default new Vuex.Store({
     loginState: {
       isAuthenticated: 'true', // 有unknown，true，false三种状态
       username: 'username',
-      roleLevel: 3
+      roleLevel: 0
     },
 
     dialogs: {
-      loginDialog: false
+      loginDialog: false,
+      passwordDialog: true
     },
 
     drawer: false,
@@ -36,6 +37,10 @@ export default new Vuex.Store({
       return state.dialogs.loginDialog
     },
 
+    getPasswordDialogState (state) {
+      return state.dialogs.passwordDialog
+    },
+
     getDrawerState (state) {
       return state.drawer
     },
@@ -56,6 +61,10 @@ export default new Vuex.Store({
 
     changeLoginDialogState (state, dialogOn) {
       state.dialogs.loginDialog = dialogOn
+    },
+
+    changePasswordDialogState (state, dialogOn) {
+      state.dialogs.passwordDialog = dialogOn
     },
 
     changeDrawerState (state, drawerOn) {
