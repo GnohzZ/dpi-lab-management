@@ -82,7 +82,7 @@
                           dense
                           single-line
                           flat
-                          :rules="[rules.required, rules.counter]"
+                          :rules="[rules.required, rules.counter, rules.username]"
                           v-model = "newUsername"
                           v-on:update:error="usernameErr = $event"
                         ></v-text-field>
@@ -245,6 +245,24 @@
       v-if = "isChangingPwd"
       v-on:clickClose="closePasswordDialog"
     ></ChangePasswordDialog>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="2000"
+      color="error"
+      top
+    >
+      {{snackbarText}}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="secondary"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -282,6 +300,15 @@ export default {
         email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
+        },
+        username: value => {
+          const pattern1 = /^[a-zA-Z]/
+          const pattern2 = /[^-_a-zA-Z0-9]/
+          const pattern3 = /^[a-zA-Z]([-_a-zA-Z0-9]{6,20})$/
+          if (!(pattern1.test(value))) return 'Start with letters.'
+          else if ((pattern2.test(value))) return 'Contains only letters, numbers, - and _.'
+          else if (!(pattern3.test(value))) return '6-20 charaters'
+          else return true
         }
       },
       pwd1: '',
@@ -290,6 +317,8 @@ export default {
       usernameErr: false,
       pwd1Err: false,
       pwd2Err: false,
+      snackbar: false,
+      snackbarText: '',
 
       tableLoading: false,
       headers: [
@@ -323,25 +352,32 @@ export default {
     },
 
     requestEditUsername: function () {
-      // TODO:if there are errors in text field, alert
-      if (!this.usernameErr && !this.pwd1Err && !(this.newUsername === '')) {
-        // TODO:send request to edit username and change local (vuex and this page) username
-        this.pwd1 = '' // TODO:here is an error
-        this.isEditingUsername = false
+      if ((this.newUsername === '') || (this.pwd1 === '')) {
+        this.snackbar = true
+        this.snackbarText = 'Please complete username and password.'
+      } else if (this.usernameErr || this.pwd1Err) {
+        this.snackbar = true
+        this.snackbarText = 'Please check the errors.'
       } else {
-        console.log('err')
+        // TODO:send request to edit username and change local (vuex and this page) username
+        this.pwd1 = ''
+        this.newUsername = ''
+        this.isEditingUsername = false
       }
     },
 
     requestEditEmail: function () {
-      // TODO:if there are errors in text field, alert
-      if (!this.emailErr && !this.pwd2Err && !(this.newEmail === '')) {
-        // TODO:send request to edit username and change local (vuex and this page) username
-        this.pwd2 = '' // TODO:here is an error
-        this.isEditingEmail = false
-        console.log(this.emailErr)
+      if ((this.newEmai === '') || (this.pwd2 === '')) {
+        this.snackbar = true
+        this.snackbarText = 'Please complete email and password.'
+      } else if (this.emailErr || this.pwd2Err) {
+        this.snackbar = true
+        this.snackbarText = 'Please check the errors.'
       } else {
-        console.log('err')
+        // TODO:send request to edit email and change local (vuex and this page) email
+        this.pwd2 = ''
+        this.newEmail = ''
+        this.isEditingEmail = false
       }
     },
 
