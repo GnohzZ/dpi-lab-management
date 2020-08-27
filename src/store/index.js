@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loginState: {
-      isAuthenticated: 'true', // 有unknown，true，false三种状态
+      isAuthenticated: 'false', // 有unknown，true，false三种状态
       username: 'username',
       roleLevel: 0
     },
