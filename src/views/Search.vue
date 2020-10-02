@@ -31,6 +31,7 @@
             </v-card-title>
             <v-data-table
               :height="maxHeight"
+              item-key="name"
               fixed-header
               :loading = "tableLoading"
               :headers="headers"
@@ -42,7 +43,13 @@
               :items-per-page="itemsPerPage"
               hide-default-footer
               v-resize = "onResize"
-            ></v-data-table>
+              expand = "true"
+              show-expand
+            >
+              <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">More info about {{ item.name }}</td>
+              </template>
+            </v-data-table>
             <v-divider></v-divider>
             <v-row
               align="center"
@@ -78,6 +85,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       itemNumberPerPage: [5, 10, 15, 20],
+      expanded: [],
       search: '',
       tFooterProp: {
         'items-per-page-text': 'Per page'
@@ -221,7 +229,7 @@ export default {
   computed: {
     maxHeight: function () {
       const mheight = this.windowHeight - 265
-      if (mheight > 48 * (this.itemsPerPage + 1)) return 48 * (this.itemsPerPage + 1)
+      if (mheight > 60 * (this.itemsPerPage + 1)) return 60 * (this.itemsPerPage + 1)
       else return this.windowHeight - 265
     },
     pageCount: {
@@ -231,6 +239,7 @@ export default {
       set () {}
     }
   },
+
   created () {
     this.onResize()
   }
